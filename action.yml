@@ -6,6 +6,10 @@ inputs:
     required: false
     description: 'The version of Qiita CLI to install.'
     default: 'latest'
+  github-token:
+    required: false
+    description: 'Used to pull Qiita CLI from Github'
+    default: ${{ github.token }}
 
 runs:
   using: 'node16'

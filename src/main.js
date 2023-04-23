@@ -1,15 +1,69 @@
 const core = require("@actions/core");
+const github = require("@actions/github");
 const tc = require("@actions/tool-cache");
 
+const owner = "koki-develop";
+const repo = "qiita-cli";
+
 (async () => {
-  const version = (() => {
-    const version = core.getInput("version");
-    if (!version.startsWith("v")) {
-      return `v${version}`;
+  const version = await _getVersion(core.getInput("version"));
+  const cliPath = await _download(version);
+  await _install(cliPath);
+})().catch((err) => {
+  core.setFailed(err.message);
+});
+
+/**
+ * @param {String} path
+ * @returns {Promise<String>}
+ */
+const _install = async (path) => {
+  core.info("Installing...");
+
+  const extractedPath = await (async () => {
+    switch (process.platform) {
+      case "win32":
+        return tc.extractZip(path);
+      case "tar.gz":
+        return tc.extractTar(path);
     }
   })();
+  const binPath = await tc.cacheDir(extractedPath, "qiita", version);
+  core.addPath(binPath);
+
+  core.info(`Installed to ${binPath}`);
+  return binPath;
+};
+
+/**
+ * @param {String} version
+ * @returns {Promise<String>}
+ */
+const _getVersion = async (version) => {
+  const token = core.getInput("github-token");
+  const octo = github.getOctokit(token);
+
+  let release;
+  if (version === "latest") {
+    release = await octo.repos.getLatestRelease({ owner, repo });
+  } else {
+    if (!version.startsWith("v")) {
+      version = `v${version}`;
+    }
+    release = await octo.repos.getReleaseByTag({ owner, repo, tag: version });
+  }
+
+  const version = release.data.tag_name;
   core.info(`version: ${version}`);
 
+  return version;
+};
+
+/**
+ * @param {String} version
+ * @returns {Promise<String>}
+ */
+const _download = async (version) => {
   core.info(`platform: ${process.platform}`);
   core.info(`arch: ${process.arch}`);
 
@@ -40,31 +94,19 @@ const tc = require("@actions/tool-cache");
   })();
 
   const ext = (() => {
-    switch (platform) {
-      case "Windows":
+    switch (process.platform) {
+      case "win32":
         return "zip";
       default:
         return "tar.gz";
     }
   })();
 
-  const url = `https://github.com/koki-develop/qiita-cli/releases/download/${version}/qiita_${platform}_${arch}.${ext}`;
+  const url = `https://github.com/${owner}/${repo}/releases/download/${version}/qiita_${platform}_${arch}.${ext}`;
+
   core.info(`Downloading... ${url}`);
   const cliPath = await tc.downloadTool(url);
   core.info(`Downloaded to ${cliPath}`);
 
-  core.info("Installing...");
-  const extractedPath = await (async () => {
-    switch (ext) {
-      case "zip":
-        return tc.extractZip(cliPath);
-      case "tar.gz":
-        return tc.extractTar(cliPath);
-    }
-  })();
-  const binPath = await tc.cacheDir(extractedPath, "qiita", version);
-  core.addPath(binPath);
-  core.info(`Installed to ${binPath}`);
-})().catch((err) => {
-  core.setFailed(err.message);
-});
+  return cliPath;
+};
