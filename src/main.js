@@ -3,7 +3,7 @@ const tc = require("@actions/tool-cache");
 
 (async () => {
   const version = (() => {
-    const version = "0.1.0"; // TODO: get from input
+    const version = core.getInput("version");
     if (!version.startsWith("v")) {
       return `v${version}`;
     }
@@ -62,7 +62,7 @@ const tc = require("@actions/tool-cache");
         return tc.extractTar(cliPath);
     }
   })();
-  const binPath = await tc.cacheDir(extractedPath, "qiita", "0.1.0");
+  const binPath = await tc.cacheDir(extractedPath, "qiita", version);
   core.addPath(binPath);
   core.info(`Installed to ${binPath}`);
 })().catch((err) => {
