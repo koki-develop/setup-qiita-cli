@@ -39,12 +39,28 @@ const tc = require("@actions/tool-cache");
     }
   })();
 
-  const url = `https://github.com/koki-develop/qiita-cli/releases/download/${version}/qiita_${platform}_${arch}.tar.gz`;
+  const ext = (() => {
+    switch (platform) {
+      case "Windows":
+        return "zip";
+      default:
+        return "tar.gz";
+    }
+  })();
+
+  const url = `https://github.com/koki-develop/qiita-cli/releases/download/${version}/qiita_${platform}_${arch}.${ext}`;
   core.info(`Downloading... ${url}`);
   const cliPath = await tc.downloadTool(url);
 
   core.info("Installing...");
-  const extractedPath = await tc.extractTar(cliPath);
+  const extractedPath = await (async () => {
+    switch (ext) {
+      case "zip":
+        return tc.extractZip(cliPath);
+      case "tar.gz":
+        return tc.extractTar(cliPath);
+    }
+  })();
   const binPath = await tc.cacheDir(extractedPath, "qiita", "0.1.0");
   core.addPath(binPath);
   core.info("Installed.");
