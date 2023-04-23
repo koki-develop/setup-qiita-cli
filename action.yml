@@ -1,5 +1,5 @@
 name: 'Setup Qiita CLI'
-description: 'Sets up Qiita CLI in your GitHub Actions workflow'
+description: 'Sets up Qiita CLI in your GitHub Actions workflow.'
 
 runs:
   using: 'node16'
