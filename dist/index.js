@@ -13667,12 +13667,16 @@ const _getVersion = async (version) => {
 
   let release;
   if (version === "latest") {
-    release = await octo.repos.getLatestRelease({ owner, repo });
+    release = await octo.rest.repos.getLatestRelease({ owner, repo });
   } else {
     if (!version.startsWith("v")) {
       version = `v${version}`;
     }
-    release = await octo.repos.getReleaseByTag({ owner, repo, tag: version });
+    release = await octo.rest.repos.getReleaseByTag({
+      owner,
+      repo,
+      tag: version,
+    });
   }
 
   version = release.data.tag_name;
