@@ -13635,14 +13635,6 @@ const tc = __nccwpck_require__(7784);
 const owner = "koki-develop";
 const repo = "qiita-cli";
 
-(async () => {
-  const version = await _getVersion(core.getInput("version"));
-  const cliPath = await _download(version);
-  await _install(cliPath);
-})().catch((err) => {
-  core.setFailed(err.message);
-});
-
 /**
  * @param {String} path
  * @returns {Promise<String>}
@@ -13740,6 +13732,14 @@ const _download = async (version) => {
 
   return cliPath;
 };
+
+(async () => {
+  const version = await _getVersion(core.getInput("version"));
+  const cliPath = await _download(version);
+  await _install(cliPath);
+})().catch((err) => {
+  core.setFailed(err.message);
+});
 
 })();
 
