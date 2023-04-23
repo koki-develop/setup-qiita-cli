@@ -1,5 +1,5 @@
 {
-  "name": "setup-qiita-cli-action",
+  "name": "setup-qiita-cli",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.0",
