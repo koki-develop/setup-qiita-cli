@@ -6691,13 +6691,37 @@ const tc = __nccwpck_require__(7784);
   })();
   core.info(`version: ${version}`);
 
-  const platform = process.platform;
-  const arch = process.arch;
-  core.info(`platform: ${platform}`);
-  core.info(`arch: ${arch}`);
+  core.info(`platform: ${process.platform}`);
+  core.info(`arch: ${process.arch}`);
 
-  core.info("Downloading...");
-  const url = `https://github.com/koki-develop/qiita-cli/releases/download/${version}/qiita_Linux_x86_64.tar.gz`;
+  const platform = (() => {
+    switch (process.platform) {
+      case "win32":
+        return "Windows";
+      case "linux":
+        return "Linux";
+      case "darwin":
+        return "Darwin";
+      default:
+        return "Linux";
+    }
+  })();
+
+  const arch = (() => {
+    switch (process.arch) {
+      case "x64":
+        return "x86_64";
+      case "arm64":
+        return "arm64";
+      case "ia32":
+        return "i386";
+      default:
+        return "x86_64";
+    }
+  })();
+
+  const url = `https://github.com/koki-develop/qiita-cli/releases/download/${version}/qiita_${platform}_${arch}.tar.gz`;
+  core.info(`Downloading... ${url}`);
   const cliPath = await tc.downloadTool(url);
 
   core.info("Installing...");
