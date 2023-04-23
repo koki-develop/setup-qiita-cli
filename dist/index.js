@@ -13629,6 +13629,7 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 const core = __nccwpck_require__(2186);
+const exec = __nccwpck_require__(1514);
 const github = __nccwpck_require__(5438);
 const tc = __nccwpck_require__(7784);
 
@@ -13738,10 +13739,25 @@ const _download = async (version) => {
   return cliPath;
 };
 
+/**
+ * @param {String} accessToken
+ * @param {String} format
+ */
+const configure = async (accessToken, format) => {
+  await exec.exec("qiita", [
+    "configure",
+    "--access-token",
+    accessToken,
+    "--format",
+    format,
+  ]);
+};
+
 (async () => {
   const version = await _getVersion(core.getInput("version"));
   const cliPath = await _download(version);
   await _install(version, cliPath);
+  await configure(core.getInput("access-token"), core.getInput("format"));
 })().catch((err) => {
   core.setFailed(err.message);
 });
