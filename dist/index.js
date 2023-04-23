@@ -13647,7 +13647,7 @@ const _install = async (version, path) => {
     switch (process.platform) {
       case "win32":
         return tc.extractZip(path);
-      case "tar.gz":
+      default:
         return tc.extractTar(path);
     }
   })();
