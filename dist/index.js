@@ -13641,7 +13641,16 @@ const repo = "qiita-cli";
  * @param {String} path
  * @returns {Promise<String>}
  */
-const _install = async (version, path) => {
+const _install = async (version) => {
+  const cacheDir = tc.find("qiita", version);
+  if (cacheDir) {
+    core.info(`Found cached version ${version}.`);
+    core.addPath(cacheDir);
+    return cacheDir;
+  }
+
+  const path = await _download(version);
+
   core.info("Installing...");
 
   const extractedPath = await (async () => {
@@ -13655,7 +13664,7 @@ const _install = async (version, path) => {
   const binPath = await tc.cacheDir(extractedPath, "qiita", version);
   core.addPath(binPath);
 
-  core.info(`Installed to ${binPath}`);
+  core.info(`Installed to ${binPath}.`);
   return binPath;
 };
 
@@ -13734,7 +13743,7 @@ const _download = async (version) => {
 
   core.info(`Downloading... ${url}`);
   const cliPath = await tc.downloadTool(url);
-  core.info(`Downloaded to ${cliPath}`);
+  core.info(`Downloaded to ${cliPath}.`);
 
   return cliPath;
 };
@@ -13755,8 +13764,7 @@ const configure = async (accessToken, format) => {
 
 (async () => {
   const version = await _getVersion(core.getInput("version"));
-  const cliPath = await _download(version);
-  await _install(version, cliPath);
+  await _install(version);
   await configure(core.getInput("access-token"), core.getInput("format"));
 })().catch((err) => {
   core.setFailed(err.message);
