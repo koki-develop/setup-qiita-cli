@@ -8,6 +8,6 @@ const tc = require("@actions/tool-cache");
   const extractedPath = await tc.extractTar(cliPath);
   const binPath = await tc.cacheDir(extractedPath, "qiita", "0.1.0");
   core.addPath(binPath);
-}).catch((error) => {
-  core.setFailed(error.message);
+})().catch((err) => {
+  core.setFailed(err.message);
 });
