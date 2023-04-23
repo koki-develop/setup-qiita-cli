@@ -13636,10 +13636,11 @@ const owner = "koki-develop";
 const repo = "qiita-cli";
 
 /**
+ * @param {String} version
  * @param {String} path
  * @returns {Promise<String>}
  */
-const _install = async (path) => {
+const _install = async (version, path) => {
   core.info("Installing...");
 
   const extractedPath = await (async () => {
@@ -13740,7 +13741,7 @@ const _download = async (version) => {
 (async () => {
   const version = await _getVersion(core.getInput("version"));
   const cliPath = await _download(version);
-  await _install(cliPath);
+  await _install(version, cliPath);
 })().catch((err) => {
   core.setFailed(err.message);
 });
