@@ -53,7 +53,7 @@ const _getVersion = async (version) => {
     release = await octo.repos.getReleaseByTag({ owner, repo, tag: version });
   }
 
-  const version = release.data.tag_name;
+  version = release.data.tag_name;
   core.info(`version: ${version}`);
 
   return version;
