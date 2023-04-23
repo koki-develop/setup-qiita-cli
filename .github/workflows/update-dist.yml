@@ -31,3 +31,10 @@ jobs:
             git commit -m "update dist"
             git push origin main
           fi
+
+  ci:
+    runs-on: ubuntu-latest
+    needs: [update-dist]
+    steps:
+      - uses: koki-develop/setup-qiita-cli@main
+      - run: qiita --version
