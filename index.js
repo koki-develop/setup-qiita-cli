@@ -51,6 +51,7 @@ const tc = require("@actions/tool-cache");
   const url = `https://github.com/koki-develop/qiita-cli/releases/download/${version}/qiita_${platform}_${arch}.${ext}`;
   core.info(`Downloading... ${url}`);
   const cliPath = await tc.downloadTool(url);
+  core.info(`Downloaded to ${cliPath}`);
 
   core.info("Installing...");
   const extractedPath = await (async () => {
@@ -63,7 +64,7 @@ const tc = require("@actions/tool-cache");
   })();
   const binPath = await tc.cacheDir(extractedPath, "qiita", "0.1.0");
   core.addPath(binPath);
-  core.info("Installed.");
+  core.info(`Installed to ${binPath}`);
 })().catch((err) => {
   core.setFailed(err.message);
 });
