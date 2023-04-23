@@ -1,6 +1,7 @@
 {
   "name": "setup-qiita-cli",
   "license": "MIT",
+  "main": "dist/index.js",
   "scripts": {
     "build": "ncc build index.js --license licenses.txt"
   },
