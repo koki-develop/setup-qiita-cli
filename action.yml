@@ -6,6 +6,13 @@ inputs:
     required: false
     description: 'The version of Qiita CLI to install.'
     default: 'latest'
+  access-token:
+    required: true
+    description: 'Your Qiita access token.'
+  format:
+    required: false
+    description: 'Default output format.'
+    default: table
   github-token:
     required: false
     description: 'Used to pull Qiita CLI from Github'

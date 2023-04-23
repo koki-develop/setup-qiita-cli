@@ -1,4 +1,5 @@
 const core = require("@actions/core");
+const exec = require("@actions/exec");
 const github = require("@actions/github");
 const tc = require("@actions/tool-cache");
 
@@ -108,10 +109,25 @@ const _download = async (version) => {
   return cliPath;
 };
 
+/**
+ * @param {String} accessToken
+ * @param {String} format
+ */
+const configure = async (accessToken, format) => {
+  await exec.exec("qiita", [
+    "configure",
+    "--access-token",
+    accessToken,
+    "--format",
+    format,
+  ]);
+};
+
 (async () => {
   const version = await _getVersion(core.getInput("version"));
   const cliPath = await _download(version);
   await _install(version, cliPath);
+  await configure(core.getInput("access-token"), core.getInput("format"));
 })().catch((err) => {
   core.setFailed(err.message);
 });
