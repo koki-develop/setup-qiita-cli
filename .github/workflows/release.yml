@@ -1,0 +1,26 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: git config
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+      - name: extract release version
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: extract main version
+        run: echo "MAJOR_VERSION=$(echo ${{ env.RELEASE_VERSION }} | cut -d . -f 1)" >> $GITHUB_ENV
+      - name: update main version
+        run: |
+          git tag --force ${{ env.MAJOR_VERSION }}
+          git push --force origin ${{ env.MAJOR_VERSION }}
