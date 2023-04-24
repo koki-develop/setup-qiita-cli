@@ -3,7 +3,7 @@
   "license": "MIT",
   "main": "dist/index.js",
   "engines": {
-    "node": "16.x"
+    "node": "18.x"
   },
   "scripts": {
     "build": "ncc build ./src/main.js --license licenses.txt"
