@@ -4,7 +4,7 @@
 [![GitHub](https://img.shields.io/github/license/koki-develop/setup-qiita-cli)](./LICENSE)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/koki-develop/setup-qiita-cli/release.yml)](https://github.com/koki-develop/setup-qiita-cli/actions/workflows/release.yml)
 
-GitHub Actions ワークフローで Qiita CLI をセットアップするアクション。
+GitHub Actions ワークフローで [Qiita CLI](https://github.com/koki-develop/qiita-cli) をセットアップするアクション。
 
 # 目次
 
